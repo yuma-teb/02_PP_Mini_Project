@@ -37,7 +37,28 @@ public class QueryBuilder {
         return this;
     }
 
+    /**
+     * a function to give condition to query select
+     * @param condition
+     * @return
+     */
+    public QueryBuilder where (String ...condition) {
+        if(table.equals("")) {
+            throw new IllegalArgumentException("You must specify a table. Where clause must used after .from() methods");
+        }
+
+        for(String c : condition) {
+            this.conditions.add(c);
+        }
+
+        return this;
+    }
+
     public String build() {
+        if(table.equals("")) {
+            throw new IllegalArgumentException("You must specify a table.");
+        }
+
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT ");
 
@@ -58,6 +79,4 @@ public class QueryBuilder {
 
         return sb.toString();
     }
-
-
 }
