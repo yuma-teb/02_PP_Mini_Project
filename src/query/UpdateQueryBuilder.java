@@ -40,7 +40,7 @@ public class UpdateQueryBuilder extends QueryBuilder implements IConditionFuncti
         // create "field = ?"
         List<String> fieldsToSet = new ArrayList<>();
         for(String field: fields.keySet()) {
-            fieldsToSet.add(field + "= ?"); //
+            fieldsToSet.add(field + " = ?"); //
         }
         query.append(String.join(", ", fieldsToSet));
         parameters.addAll(fields.values());

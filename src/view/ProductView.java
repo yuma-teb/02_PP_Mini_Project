@@ -8,10 +8,7 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ProductView {
     ProductController productController = new ProductController();
@@ -129,7 +126,7 @@ public class ProductView {
 
             product = productController.getProduct(id);
         }
-        showAProduct(product);
+        showProduct(product);
          breakWhile:
         while (true) {
             System.out.println(product.toString());
@@ -179,7 +176,14 @@ public class ProductView {
             case "ui":
                 break;
             case "uu":
-               productController.updating();
+                if(productController.getUpdatedProduct().isEmpty()) {
+                    System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
+                    return;
+                }
+
+                showProduct(productController.getUpdatedProduct());
+                Helper.pressEnterToContinue();
+                productController.updating();
                 break;
             case "b":
                 break;
@@ -209,12 +213,19 @@ public class ProductView {
         System.out.println(table.render());
     }
 
-    private void showAProduct (Product product) {
-
+    private void showProduct (Product product) {
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
-        Helper.renderData(table,product);
+        Helper.renderData(table, product);
+        System.out.println(table.render());
+    }
+
+    private void showProduct (List<Product> products) {
+        Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
+        //when trigger format table it will add set column width and add header
+        Helper.formatTable(table);
+        Helper.renderData(table, products, products.size());
         System.out.println(table.render());
     }
 }

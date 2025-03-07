@@ -4,7 +4,9 @@ import Utils.Helper;
 import error.NotFoundException;
 import query.SelectQueryBuilder;
 import query.TableName;
+import query.UpdateQueryBuilder;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +75,49 @@ public class ProductRepository {
     public void saveProducts(List<Product> products) {
 
     }
+
     //update product
     public void updateProducts(List<Product> products) {
+        try {
+            conn.setAutoCommit(false);
+            products.forEach(product -> {
+//                UpdateQueryBuilder sql = new UpdateQueryBuilder(TableName.products)
+//                        .setValue("name", product.getName())
+//                        .setValue("unitPrice", product.getUnitPrice())
+//                        .setValue("qty", product.getQty())
+//                        .where("id", product.getId());
+                String sql = "UPDATE products SET name = ?, unitPrice = ?, qty = ? WHERE id = ?";
+                try (PreparedStatement st = conn.prepareStatement(sql)) {
+                    st.setString(1, product.getName());
+                    st.setBigDecimal(2, new BigDecimal(product.getUnitPrice())); // Use BigDecimal for NUMERIC(10, 2)
+                    st.setInt(3, Integer.parseInt(product.getQty()));
+                    st.setInt(4, product.getId());
+
+                    st.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }  catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                    System.out.println("Transaction rolled back due to error.");
+                }
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace(); // Log rollback failure
+            }
+            throw new RuntimeException("Transaction failed", e);
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
 
     }
 }

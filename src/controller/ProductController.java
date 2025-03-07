@@ -7,6 +7,7 @@ import view.ProductView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductController {
     private ProductRepository productRepository = new ProductRepository();
@@ -40,17 +41,21 @@ public class ProductController {
 
     //add product to update state
     public void update(Product product) {
-        updatedProduct.add(product);
+        Optional<Product> existingProduct = updatedProduct.stream()
+                .filter(p -> p.getId() == product.getId())
+                .findFirst();
+
+        if (existingProduct.isPresent()) {
+            int index = updatedProduct.indexOf(existingProduct.get());
+            updatedProduct.set(index, product);
+        } else {
+            updatedProduct.add(product);
+        }
     }
 
     //update product to database
     public void updating() {
-        if(updatedProduct.isEmpty()) {
-            System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
-            return;
-        }
-
-        System.out.println(updatedProduct.toString());
+        productRepository.updateProducts(updatedProduct);
     }
 
     //delete product

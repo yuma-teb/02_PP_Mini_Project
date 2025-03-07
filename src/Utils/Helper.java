@@ -129,4 +129,10 @@ public interface Helper {
 
         return input;
     }
+
+    static void pressEnterToContinue() {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Press Enter to continue...");
+            sc.nextLine();
+    }
 }
