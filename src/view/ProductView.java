@@ -115,7 +115,7 @@ public class ProductView {
 
     // update product by id
     private void update() {
-        int id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number" ));
+        int id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
         Product product = productController.getProduct(id);
         showAProduct(product);
 
