@@ -39,8 +39,8 @@ public interface Helper {
         table.addCell(product.getImportDate(), align);
     }
 
-    static void renderData(Table table, List<Product> products, int limit) {
-        products.stream().limit(limit).forEach(product -> {
+    static void renderData(Table table, List<Product> products, int pageNum,int limit) {
+        products.stream().skip((pageNum-1)*limit).limit(limit).forEach(product -> {
             table.addCell(String.valueOf(product.getId()), align);
             table.addCell(product.getName(), align);
             table.addCell(product.getUnitPrice(), align);
@@ -63,7 +63,7 @@ public interface Helper {
             if (!(input = sc.nextLine()).trim().isEmpty()) {
                 return input;
             }
-            System.out.println(emptyMsg);
+            printErrorMsg(emptyMsg);
         } while (true);
 
     }
@@ -75,7 +75,7 @@ public interface Helper {
             if (input.matches(regex)) {
                 return input;
             }
-            System.out.println(regexMsg);
+            printErrorMsg(regexMsg);
         } while (true);
     }
 
@@ -88,5 +88,12 @@ public interface Helper {
     //error message
     static void printErrorMsg(String msg) {
         System.out.println(RED + msg + RESET);
+    }
+
+    //press key to continue
+    static void pressKeyToContinue(String msg){
+        Scanner sc = new Scanner(System.in);
+        System.out.println(msg+"......");
+        sc.nextLine();
     }
 }

@@ -15,6 +15,8 @@ public class ProductView {
     RowController rowController = new RowController();
     private int limit = rowController.get();
     private boolean isExit = false;
+    private int pageNum = 1;
+    private int totalPage =(int) Math.ceil(productController.getAllProduct().size() / limit);
 
     public void start() {
         do {
@@ -58,6 +60,8 @@ public class ProductView {
             case "re":
                 break;
             case "e":
+                System.out.println("Thank you😁🙏🏻");
+                isExit=true;
                 break;
             default:
                 handlePagination(choice.toLowerCase());
@@ -68,16 +72,42 @@ public class ProductView {
     private void handlePagination(String choice) {
         switch (choice) {
             case "n":
+                pageNum++;
+                if(pageNum>totalPage){
+                    pageNum=totalPage;
+                    Helper.printErrorMsg("You are already on last page");
+                    Helper.pressKeyToContinue("Press any key to continue");
+                }
                 break;
             case "p":
+                pageNum--;
+                if(pageNum==0){
+                    pageNum=1;
+                    Helper.printErrorMsg("You are already on the fist page");
+                    Helper.pressKeyToContinue("Press any key to continue");
+                }
                 break;
             case "f":
+                pageNum = 1;
                 break;
             case "l":
+                pageNum =totalPage;
                 break;
             case "g":
+                do{
+                    int gotoPage = Integer.parseInt(Helper.getAndValidate("Enter page number: ","Page Number cannot be empty","-?\\d+","Wrong input format. Please input a number"));
+                    if(gotoPage<0){
+                        Helper.printErrorMsg("Page number cannot be negative");
+                        continue;
+                    }
+                    else if(gotoPage>totalPage||gotoPage==0){
+                        Helper.printErrorMsg("Total page is "+totalPage+", You can't enter number 0 or more than total pages");
+                        continue;
+                    }
+                    pageNum=gotoPage;
+                    break;
+                }while (true);
                 break;
-            default:
 
         }
     }
@@ -130,12 +160,12 @@ public class ProductView {
     //show all products
     private void showProduct() {
         List<Product> allProduct = productController.getAllProduct();
-
+        totalPage = (allProduct.size() + limit - 1) / limit;
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
-        Helper.renderData(table, allProduct, limit);
-        Helper.addFooter(table, 1, 4, allProduct.size());
+        Helper.renderData(table, allProduct, pageNum, limit);
+        Helper.addFooter(table, pageNum, totalPage, allProduct.size());
         System.out.println(table.render());
     }
 
