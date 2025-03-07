@@ -33,14 +33,14 @@ public class UpdateQueryBuilder extends QueryBuilder implements IConditionFuncti
         if (conditions.isEmpty()) { // condition must specify to find row to update
             throw new IllegalStateException("WHERE clause is required for UPDATE queries.");
         }
-
+//        name = ?,
         StringBuilder query = new StringBuilder();
         query.append("UPDATE ").append(table).append(" SET ");
 
         // create "field = ?"
         List<String> fieldsToSet = new ArrayList<>();
         for(String field: fields.keySet()) {
-            fieldsToSet.add(field + " ?");
+            fieldsToSet.add(field + "= ?"); //
         }
         query.append(String.join(", ", fieldsToSet));
         parameters.addAll(fields.values());
