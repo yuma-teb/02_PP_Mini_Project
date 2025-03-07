@@ -37,7 +37,6 @@ public class ProductView {
         String choice = Helper.getAndValidate("=>Chooise an option(): ", "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
-
                 break;
             case "r":
                 break;
@@ -112,6 +111,11 @@ public class ProductView {
 
     }
 
+    // update product by id
+    private void update() {
+        Product product = productController.getProduct(1);
+    }
+
     //save data to database (option un)
     private void checkUnsaved() {
 
@@ -138,6 +142,4 @@ public class ProductView {
         Helper.addFooter(table, 1, 4, allProduct.size());
         System.out.println(table.render());
     }
-
-
 }
