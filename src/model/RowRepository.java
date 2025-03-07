@@ -12,7 +12,7 @@ public class RowRepository {
     //get
     public int get(){
         try(Statement st = conn.createStatement()){
-            String sql = "select * from row;";
+            String sql = "select * from rows;";
             ResultSet resultSet = st.executeQuery(sql);
             int numToDisplay = 0;
             while (resultSet.next()){

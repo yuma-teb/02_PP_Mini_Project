@@ -29,7 +29,7 @@ public class ProductController {
 
     //add product to add state
     public void add(Product product) {
-
+        savedProduct.add(product);
     }
 
     //save product to database
