@@ -1,5 +1,6 @@
 package controller;
 
+import Utils.Helper;
 import model.Product;
 import model.ProductRepository;
 import view.ProductView;
@@ -39,12 +40,17 @@ public class ProductController {
 
     //add product to update state
     public void update(Product product) {
-
+        updatedProduct.add(product);
     }
 
     //update product to database
     public void updating() {
+        if(updatedProduct.isEmpty()) {
+            System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
+            return;
+        }
 
+        System.out.println(updatedProduct.toString());
     }
 
     //delete product

@@ -95,6 +95,9 @@ public interface Helper {
         return input.equalsIgnoreCase("y");
     }
 
+    static String returnStringColor(String message, String color) {
+        return color + message + RESET;
+    }
     // three attempt input
     static String getAndValidate(String prompt, String emptyMsg, String regex, String regexMsg, int maxAttempts) {
         Scanner sc = new Scanner(System.in);
@@ -103,7 +106,7 @@ public interface Helper {
         int attempts = 0;
 
         while (true) {
-            System.out.println(prompt);
+            System.out.print(prompt);
             input = sc.nextLine();
             if (input.isEmpty()) {
                 System.out.println(emptyMsg);
@@ -117,13 +120,13 @@ public interface Helper {
 
             if (attempts == maxAttempts) {
                 boolean isContinue = wantToContinue();
-                if (isContinue) {
                     if (!isContinue) {
+                        input = "-1";
                         break;
-                    }
                 }
             }
         }
+
         return input;
     }
 }

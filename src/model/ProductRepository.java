@@ -1,5 +1,7 @@
 package model;
 
+import Utils.Helper;
+import error.NotFoundException;
 import query.SelectQueryBuilder;
 import query.TableName;
 
@@ -30,24 +32,32 @@ public class ProductRepository {
     public Product get(int id) {
         // query
         SelectQueryBuilder sql = new SelectQueryBuilder(TableName.products)
-                                    .where("id", id);
+                .where("id", id);
 
         try (PreparedStatement st = conn.prepareStatement(sql.buildQuery())) {
             System.out.println("build query: " + sql.buildQuery());
 
-            ResultSet resultSet = st.executeQuery();
-            Product product = null;
+            try (ResultSet resultSet = st.executeQuery()) {
+                if (!resultSet.next()) {
+                    throw new NotFoundException("Product not found");
+                }
 
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("name"));
-                product =  new Product(resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getInt(4), resultSet.getTimestamp(5).toLocalDateTime().toLocalDate());
+                return new Product(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getDouble(3),
+                        resultSet.getInt(4),
+                        resultSet.getTimestamp(5).toLocalDateTime().toLocalDate()
+                );
             }
-
-            return product;
+        } catch (NotFoundException e) {
+            System.out.println(Helper.RED + e.getMessage() + Helper.RESET);
+            return null;  // or rethrow e if needed
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     //get product by name
     public Product get(String name) {

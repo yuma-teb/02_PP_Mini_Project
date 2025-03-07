@@ -9,7 +9,9 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductView {
     ProductController productController = new ProductController();
@@ -53,6 +55,7 @@ public class ProductView {
             case "sa":
                 break;
             case "un":
+                checkUnsaved();
                 break;
             case "ba":
                 break;
@@ -115,16 +118,73 @@ public class ProductView {
 
     // update product by id
     private void update() {
-        int id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
-        Product product = productController.getProduct(id);
-        showAProduct(product);
+        Product product = null;
+        int id = 0;
+        while (product == null) {
+            id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
 
-        System.out.println(product.toString());
+            if(id == -1) {
+                return;
+            }
+
+            product = productController.getProduct(id);
+        }
+        showAProduct(product);
+         breakWhile:
+        while (true) {
+            System.out.println(product.toString());
+            String option = Helper.getAndValidate("Choose an option from 1 - 5: ", "Choice cannot be empty", "^[1-5]$", "Option must be input as number from 1 -5");
+
+
+            String name;
+            String unitPrice;
+            String qty;
+
+            switch (Integer.valueOf(option)) {
+                case 1:
+                    name = Helper.getAndValidate("Enter name: ", "Name cannot be empty");
+                    product.setName(name);
+                    break;
+                case 2:
+                    unitPrice = Helper.getAndValidate("Enter price: ", "price cannot be empty", "^\\d+(\\.\\d{1,2})?$", "Price must be input as number");
+                    product.setUnitPrice(Double.parseDouble(unitPrice));
+                    break;
+                case 3:
+                    qty = Helper.getAndValidate("Enter qty: ", "qty cannot be empty", "^[1-9]\\d*$", " Qty must be input as number");
+                    product.setQty(Integer.parseInt(qty));
+                    break;
+                case 4:
+                    name = Helper.getAndValidate("Enter name: ", "Name cannot be empty");
+                    unitPrice = Helper.getAndValidate("Enter price: ", "price cannot be empty", "^\\d+(\\.\\d{1,2})?$", "Price must be input as number");
+                    qty = Helper.getAndValidate("Enter qty: ", "qty cannot be empty", "^[1-9]\\d*$", " Qty must be input as number");
+
+                    product.setName(name);
+                    product.setUnitPrice(Double.parseDouble(unitPrice));
+                    product.setQty(Integer.parseInt(qty));
+                    break;
+                case 5:
+                    break  breakWhile;
+            }
+        }
+        productController.update(product);
+
     }
 
     //save data to database (option un)
     private void checkUnsaved() {
+        String message = Helper.returnStringColor("'ui'", Helper.GREEN) + " for saving insert product and " + Helper.returnStringColor("'uu'", Helper.GREEN) + " for saving update product or " + Helper.returnStringColor("'b'", Helper.RED) + " for back to menu \n Enter your option: ";
+        String option = Helper.getAndValidate(message, "Choice cannot be empty", "(?i)^(ui|uu|b)$", Helper.returnStringColor("Please enter a correct option", Helper.RED));
 
+        switch (option.toLowerCase()) {
+            case "ui":
+                break;
+            case "uu":
+               productController.updating();
+                break;
+            case "b":
+                break;
+
+        }
     }
 
     //backup (option ba)
