@@ -1,5 +1,8 @@
 package model;
 
+import query.SelectQueryBuilder;
+import query.TableName;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +28,25 @@ public class ProductRepository {
 
     //get product by id
     public Product get(int id) {
-        try (Statement st = conn.prepareStatement("select * from products where id = " + id)) {
+        // query
+        SelectQueryBuilder sql = new SelectQueryBuilder(TableName.products)
+                                    .where("id", id);
 
+        try (PreparedStatement st = conn.prepareStatement(sql.buildQuery())) {
+            System.out.println("build query: " + sql.buildQuery());
+
+            ResultSet resultSet = st.executeQuery();
+            Product product = null;
+
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("name"));
+                product =  new Product(resultSet.getInt(1), resultSet.getString(2), resultSet.getDouble(3), resultSet.getInt(4), resultSet.getTimestamp(5).toLocalDateTime().toLocalDate());
+            }
+
+            return product;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     //get product by name
