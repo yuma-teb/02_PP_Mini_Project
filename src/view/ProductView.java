@@ -45,7 +45,7 @@ public class ProductView {
         String choice = Helper.getAndValidate("\n=>Choose an option(): ", "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
-createProduct();
+                createProduct();
                 break;
             case "r":
                 break;
