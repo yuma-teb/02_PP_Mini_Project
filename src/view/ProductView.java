@@ -211,6 +211,7 @@ public class ProductView {
             productController.delete(id);
             System.out.println(Helper.returnStringColor("Successfully delete product", Helper.GREEN));
             Helper.pressEnterToContinue();
+            pageNum = productController.getAllProduct().isEmpty()?0:1;
         }
     }
 
