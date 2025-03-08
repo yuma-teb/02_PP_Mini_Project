@@ -39,6 +39,16 @@ public interface Helper {
         table.addCell(product.getImportDate(), align);
     }
 
+    static void renderData(Table table, List<Product> products, int pageNum,int limit) {
+        products.stream().skip((pageNum-1)*limit).limit(limit).forEach(product -> {
+            table.addCell(String.valueOf(product.getId()), align);
+            table.addCell(product.getName(), align);
+            table.addCell(product.getUnitPrice(), align);
+            table.addCell(product.getQty(), align);
+            table.addCell(product.getImportDate(), align);
+        });
+    }
+
     static void renderData(Table table, List<Product> products, int limit) {
         products.stream().limit(limit).forEach(product -> {
             table.addCell(String.valueOf(product.getId()), align);
@@ -63,7 +73,7 @@ public interface Helper {
             if (!(input = sc.nextLine()).trim().isEmpty()) {
                 return input;
             }
-            System.out.println(emptyMsg);
+           printErrorMsg(emptyMsg);
         } while (true);
 
     }
@@ -75,7 +85,7 @@ public interface Helper {
             if (input.matches(regex)) {
                 return input;
             }
-            System.out.println(regexMsg);
+            printErrorMsg(regexMsg);
         } while (true);
     }
 
@@ -88,5 +98,59 @@ public interface Helper {
     //error message
     static void printErrorMsg(String msg) {
         System.out.println(RED + msg + RESET);
+    }
+
+    //press key to continue
+    static void pressKeyToContinue(String msg){
+        Scanner sc = new Scanner(System.in);
+        System.out.println(msg+"......");
+        sc.nextLine();
+    }
+
+    // ask to continue
+    private static boolean wantToContinue() {
+        String input = getAndValidate("Do you want to continues? ", "Input cannot be empty", "^[yYnN]$", "Invalid input. Please input yY or nN");
+        return input.equalsIgnoreCase("y");
+    }
+
+    static String returnStringColor(String message, String color) {
+        return color + message + RESET;
+    }
+    // three attempt input
+    static String getAndValidate(String prompt, String emptyMsg, String regex, String regexMsg, int maxAttempts) {
+        Scanner sc = new Scanner(System.in);
+
+        String input;
+        int attempts = 0;
+
+        while (true) {
+            System.out.print(prompt);
+            input = sc.nextLine();
+            if (input.isEmpty()) {
+                System.out.println(emptyMsg);
+            } else if (!input.matches(regex)) {
+                System.out.println(regexMsg);
+            } else {
+                return input;
+            }
+
+            attempts++;
+
+            if (attempts == maxAttempts) {
+                boolean isContinue = wantToContinue();
+                    if (!isContinue) {
+                        input = "-1";
+                        break;
+                }
+            }
+        }
+
+        return input;
+    }
+
+    static void pressEnterToContinue() {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Press Enter to continue...");
+            sc.nextLine();
     }
 }
