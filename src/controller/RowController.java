@@ -10,7 +10,7 @@ public class RowController {
     }
 
     //update
-    public int update(){
-        return 1;
+    public int setRow(int n){
+        return rowRepository.setRow(n);
     }
 }
