@@ -9,9 +9,6 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
-import java.time.Year;
-
-import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
@@ -21,7 +18,7 @@ public class ProductView {
     RowController rowController = new RowController();
     private int limit = rowController.get();
     private boolean isExit = false;
-    private int pageNum = 1;
+    private int pageNum = productController.getAllProduct().isEmpty()?0:1;
     private int totalPage = (int) Math.ceil(productController.getAllProduct().size() / limit);
     int id = productController.getAllProduct().isEmpty()?0:productController.getAllProduct().getLast().getId();
 
