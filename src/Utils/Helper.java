@@ -42,13 +42,15 @@ public interface Helper {
     }
 
     static void renderData(Table table, List<Product> products, int pageNum, int limit) {
-        products.stream().skip((pageNum - 1) * limit).limit(limit).forEach(product -> {
-            table.addCell(GREEN + product.getId() + RESET, align);
-            table.addCell(product.getName(), align);
-            table.addCell(product.getUnitPrice(), align);
-            table.addCell(product.getQty(), align);
-            table.addCell(product.getImportDate(), align);
-        });
+       if(pageNum!=0){
+           products.stream().skip((pageNum - 1) * limit).limit(limit).forEach(product -> {
+               table.addCell(GREEN + product.getId() + RESET, align);
+               table.addCell(product.getName(), align);
+               table.addCell(product.getUnitPrice(), align);
+               table.addCell(product.getQty(), align);
+               table.addCell(product.getImportDate(), align);
+           });
+       }
     }
 
     static void renderData(Table table, List<Product> products, int limit) {
