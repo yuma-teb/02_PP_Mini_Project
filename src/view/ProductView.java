@@ -1,7 +1,7 @@
 package view;
 
-import Utils.Backup;
-import Utils.Helper;
+import utils.Backup;
+import utils.Helper;
 import controller.ProductController;
 import controller.RowController;
 import model.Product;

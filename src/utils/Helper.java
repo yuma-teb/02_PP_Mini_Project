@@ -1,10 +1,9 @@
-package Utils;
+package utils;
 
 import model.Product;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.Table;
 
-import java.time.Year;
 import java.util.List;
 import java.util.Scanner;
 

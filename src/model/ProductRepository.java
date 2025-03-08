@@ -1,6 +1,6 @@
 package model;
 
-import Utils.Helper;
+import utils.Helper;
 import error.NotFoundException;
 import query.QueryOperator;
 import query.SelectQueryBuilder;
