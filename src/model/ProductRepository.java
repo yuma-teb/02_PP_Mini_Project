@@ -2,12 +2,10 @@ package model;
 
 import Utils.Helper;
 import error.NotFoundException;
-import query.InsertQueryBuilder;
 import query.QueryOperator;
 import query.SelectQueryBuilder;
 import query.TableName;
 
-import javax.swing.plaf.nimbus.State;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ import java.util.List;
 
 public class ProductRepository {
     private Connection conn = DatabaseConnection.getConnection();
-    //for saving state when add and update
 
     //get products from db
     public List<Product> get() {
