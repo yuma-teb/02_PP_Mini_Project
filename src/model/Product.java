@@ -17,6 +17,18 @@ public class Product {
         this.importDate = importDate;
     }
 
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

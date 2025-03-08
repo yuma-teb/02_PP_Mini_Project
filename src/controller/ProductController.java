@@ -2,10 +2,10 @@ package controller;
 
 import model.Product;
 import model.ProductRepository;
-import view.ProductView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ProductController {
     private ProductRepository productRepository = new ProductRepository();
@@ -24,7 +24,7 @@ public class ProductController {
 
     //get product by name
     public Product getProduct(String id) {
-        return productRepository.get(id);
+        return  productRepository.get(Integer.parseInt(id));
     }
 
     //add product to add state
@@ -34,17 +34,33 @@ public class ProductController {
 
     //save product to database
     public void adding() {
-
+        productRepository.saveProducts(savedProduct);
+        savedProduct.clear();
     }
 
     //add product to update state
     public void update(Product product) {
+        Optional<Product> existingProduct = updatedProduct.stream()
+                .filter(p -> p.getId() == product.getId())
+                .findFirst();
 
+        if (existingProduct.isPresent()) {
+            int index = updatedProduct.indexOf(existingProduct.get());
+            updatedProduct.set(index, product);
+        } else {
+            updatedProduct.add(product);
+        }
     }
 
     //update product to database
     public void updating() {
+        productRepository.updateProducts(updatedProduct);
+        updatedProduct.clear();
+    }
 
+    //update product to database
+    public List<Product> search(String searchTerm) {
+        return productRepository.get(searchTerm);
     }
 
     //delete product

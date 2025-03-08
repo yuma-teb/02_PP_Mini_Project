@@ -20,7 +20,7 @@ public class SelectQueryBuilder extends QueryBuilder implements IConditionFuncti
     }
 
     public SelectQueryBuilder where(String field, Object value, QueryOperator operator) {
-        conditions.add(field + " " + operator.toString() + " " + value);
+        conditions.add(field + " " + operator.toString() + " " + "'" + value + "'");
         parameters.add(value);
         return this;
     }

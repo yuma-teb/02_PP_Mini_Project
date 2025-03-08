@@ -49,6 +49,16 @@ public interface Helper {
         });
     }
 
+    static void renderData(Table table, List<Product> products, int limit) {
+        products.stream().limit(limit).forEach(product -> {
+            table.addCell(String.valueOf(product.getId()), align);
+            table.addCell(product.getName(), align);
+            table.addCell(product.getUnitPrice(), align);
+            table.addCell(product.getQty(), align);
+            table.addCell(product.getImportDate(), align);
+        });
+    }
+
     static void addFooter(Table table, int currentPage, int totalPage, int totalRecord) {
         table.addCell("Page : " + currentPage + " of " + totalPage, align, 2);
         table.addCell("Total Record : " + totalRecord, align, 3);
@@ -103,6 +113,9 @@ public interface Helper {
         return input.equalsIgnoreCase("y");
     }
 
+    static String returnStringColor(String message, String color) {
+        return color + message + RESET;
+    }
     // three attempt input
     static String getAndValidate(String prompt, String emptyMsg, String regex, String regexMsg, int maxAttempts) {
         Scanner sc = new Scanner(System.in);
@@ -111,7 +124,7 @@ public interface Helper {
         int attempts = 0;
 
         while (true) {
-            System.out.println(prompt);
+            System.out.print(prompt);
             input = sc.nextLine();
             if (input.isEmpty()) {
                 System.out.println(emptyMsg);
@@ -125,13 +138,19 @@ public interface Helper {
 
             if (attempts == maxAttempts) {
                 boolean isContinue = wantToContinue();
-                if (isContinue) {
                     if (!isContinue) {
+                        input = "-1";
                         break;
-                    }
                 }
             }
         }
+
         return input;
+    }
+
+    static void pressEnterToContinue() {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Press Enter to continue...");
+            sc.nextLine();
     }
 }
