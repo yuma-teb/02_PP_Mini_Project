@@ -8,6 +8,7 @@ import view.ProductView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 public class ProductController {
     private ProductRepository productRepository = new ProductRepository();
@@ -26,7 +27,7 @@ public class ProductController {
 
     //get product by name
     public Product getProduct(String id) {
-        return productRepository.get(id);
+        return  productRepository.get(Integer.parseInt(id));
     }
 
     //add product to add state
@@ -56,6 +57,11 @@ public class ProductController {
     //update product to database
     public void updating() {
         productRepository.updateProducts(updatedProduct);
+    }
+
+    //update product to database
+    public List<Product> search(String searchTerm) {
+        return productRepository.get(searchTerm);
     }
 
     //delete product

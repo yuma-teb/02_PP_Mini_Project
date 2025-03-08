@@ -46,6 +46,7 @@ public class ProductView {
             case "d":
                 break;
             case "s":
+                search();
                 break;
             case "se":
                 break;
@@ -219,6 +220,18 @@ public class ProductView {
             case "b":
                 break;
         }
+    }
+
+    // search product by name
+    private void search() {
+    String searchTerm = Helper.getAndValidate("Enter product name to search: ", "Product name cannot be empty");
+    List<Product> products = productController.search(searchTerm);
+    if(products == null) {
+        return;
+    }
+
+    showProduct(products);
+    Helper.pressEnterToContinue();
     }
 
     //backup (option ba)

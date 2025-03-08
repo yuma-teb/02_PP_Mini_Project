@@ -3,13 +3,16 @@ package model;
 import Utils.Helper;
 import error.NotFoundException;
 import query.InsertQueryBuilder;
+import query.QueryOperator;
 import query.SelectQueryBuilder;
 import query.TableName;
 
+import javax.swing.plaf.nimbus.State;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class ProductRepository {
     private Connection conn = DatabaseConnection.getConnection();
@@ -36,10 +39,8 @@ public class ProductRepository {
         SelectQueryBuilder sql = new SelectQueryBuilder(TableName.products)
                 .where("id", id);
 
-        try (PreparedStatement st = conn.prepareStatement(sql.buildQuery())) {
-            System.out.println("build query: " + sql.buildQuery());
-
-            try (ResultSet resultSet = st.executeQuery()) {
+        try (Statement st = conn.createStatement()) {
+            try (ResultSet resultSet = st.executeQuery(sql.buildQuery())) {
                 if (!resultSet.next()) {
                     throw new NotFoundException("Product not found");
                 }
@@ -53,7 +54,7 @@ public class ProductRepository {
                 );
             }
         } catch (NotFoundException e) {
-            System.out.println(Helper.RED + e.getMessage() + Helper.RESET);
+            System.out.println(Helper.returnStringColor(e.getMessage(), Helper.RED));
             return null;  // or rethrow e if needed
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -62,8 +63,34 @@ public class ProductRepository {
 
 
     //get product by name
-    public Product get(String name) {
-        return null;
+    public List<Product> get(String name) {
+        SelectQueryBuilder sql = new SelectQueryBuilder(TableName.products)
+                                .where("name", "%" + name + "%", QueryOperator.ILIKE);
+
+        try(PreparedStatement st = conn.prepareStatement(sql.buildQuery() + " order by id")) {
+            List<Product> products = new ArrayList<>();
+           try(ResultSet resultSet = st.executeQuery()) {
+               if(!resultSet.isBeforeFirst()) {
+                   throw new NotFoundException("There is no product with that name!!");
+               }
+
+               while (resultSet.next()) {
+                   products.add(new Product(
+                           resultSet.getInt("id"),
+                           resultSet.getString("name"), // Use column name instead of index
+                           resultSet.getDouble("unitPrice"),
+                           resultSet.getInt("qty"),
+                           resultSet.getTimestamp("importDate").toLocalDateTime().toLocalDate()
+                   ));
+               }
+               return products;
+           } catch (NotFoundException e) {
+               System.out.println(Helper.returnStringColor(e.getMessage(), Helper.RED));
+               return null;
+           }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //delete product
