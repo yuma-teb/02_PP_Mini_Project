@@ -9,6 +9,7 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -41,11 +42,11 @@ public class ProductView {
         String choice = Helper.getAndValidate("=>Chooise an option(): ", "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
-
                 break;
             case "r":
                 break;
             case "u":
+                update();
                 break;
             case "d":
                 break;
@@ -147,6 +148,15 @@ public class ProductView {
 
     }
 
+    // update product by id
+    private void update() {
+        int id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
+        Product product = productController.getProduct(id);
+        showAProduct(product);
+
+        System.out.println(product.toString());
+    }
+
     //save data to database (option un)
     private void checkUnsaved() {
 
@@ -245,5 +255,12 @@ public class ProductView {
         System.out.println(table.render());
     }
 
+    private void showAProduct (Product product) {
 
+        Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
+        //when trigger format table it will add set column width and add header
+        Helper.formatTable(table);
+        Helper.renderData(table,product);
+        System.out.println(table.render());
+    }
 }

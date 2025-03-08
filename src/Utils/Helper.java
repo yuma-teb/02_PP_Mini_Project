@@ -63,7 +63,7 @@ public interface Helper {
             if (!(input = sc.nextLine()).trim().isEmpty()) {
                 return input;
             }
-            printErrorMsg(emptyMsg);
+            System.out.println(emptyMsg);
         } while (true);
 
     }
@@ -95,5 +95,43 @@ public interface Helper {
         Scanner sc = new Scanner(System.in);
         System.out.println(msg+"......");
         sc.nextLine();
+    }
+
+    // ask to continue
+    private static boolean wantToContinue() {
+        String input = getAndValidate("Do you want to continues? ", "Input cannot be empty", "^[yYnN]$", "Invalid input. Please input yY or nN");
+        return input.equalsIgnoreCase("y");
+    }
+
+    // three attempt input
+    static String getAndValidate(String prompt, String emptyMsg, String regex, String regexMsg, int maxAttempts) {
+        Scanner sc = new Scanner(System.in);
+
+        String input;
+        int attempts = 0;
+
+        while (true) {
+            System.out.println(prompt);
+            input = sc.nextLine();
+            if (input.isEmpty()) {
+                System.out.println(emptyMsg);
+            } else if (!input.matches(regex)) {
+                System.out.println(regexMsg);
+            } else {
+                return input;
+            }
+
+            attempts++;
+
+            if (attempts == maxAttempts) {
+                boolean isContinue = wantToContinue();
+                if (isContinue) {
+                    if (!isContinue) {
+                        break;
+                    }
+                }
+            }
+        }
+        return input;
     }
 }
