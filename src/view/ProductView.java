@@ -10,6 +10,8 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
 
+import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,6 +22,7 @@ public class ProductView {
     private boolean isExit = false;
     private int pageNum = 1;
     private int totalPage = (int) Math.ceil(productController.getAllProduct().size() / limit);
+    int id = productController.getAllProduct().isEmpty()?0:productController.getAllProduct().getLast().getId();
 
     public void start() {
         do {
@@ -42,6 +45,7 @@ public class ProductView {
         String choice = Helper.getAndValidate("\n=>Choose an option(): ", "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
+                createProduct();
                 break;
             case "r":
                 getProductById();
@@ -126,7 +130,34 @@ public class ProductView {
 
     //create product (option w)
     private void createProduct() {
-
+        System.out.println("ID:" + (id + 1));
+        id++;
+        String name = Helper.getAndValidate("Input product name: ", "Product name cannot be empty");
+        double price;
+        do {
+            price = Double.parseDouble(Helper.getAndValidate("Enter price: ", "Price cannot be empty", "^-?\\d+(\\.\\d+)?$", "Wrong input format! Please input a valid price"));
+            if (price < 0) {
+                Helper.printErrorMsg("Price cannot be a negative number");
+                continue;
+            }else if(price==0){
+                Helper.printErrorMsg("Price cannot be 0");
+                continue;
+            }
+            break;
+        } while (true);
+        int qty;
+        do {
+            qty = Integer.parseInt(Helper.getAndValidate("Enter quantity: ", "Quantity cannot be empty", "^-?\\d+", "Wrong input format! Please input a valid quantity"));
+            if (qty < 0) {
+                Helper.printErrorMsg("Quantity cannot be a negative number");
+                continue;
+            }else if(qty==0){
+                Helper.printErrorMsg("Quantity cannot be 0");
+                continue;
+            }
+            break;
+        } while (true);
+        productController.add(new Product(id,name,price, qty, LocalDate.now()));
     }
 
     //get product by id (option r)
