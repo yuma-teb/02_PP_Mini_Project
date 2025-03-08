@@ -29,7 +29,7 @@ public class ProductController {
 
     //add product to add state
     public void add(Product product) {
-
+        savedProduct.add(product);
     }
 
     //save product to database
@@ -64,8 +64,8 @@ public class ProductController {
     }
 
     //delete product
-    public void delete() {
-
+    public void delete(int id) {
+        productRepository.delete(id);
     }
 
     //backup (option ba)

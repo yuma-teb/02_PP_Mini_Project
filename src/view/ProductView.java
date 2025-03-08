@@ -10,6 +10,9 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
 import java.time.Year;
+
+import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -20,6 +23,7 @@ public class ProductView {
     private boolean isExit = false;
     private int pageNum = 1;
     private int totalPage = (int) Math.ceil(productController.getAllProduct().size() / limit);
+    int id = productController.getAllProduct().isEmpty()?0:productController.getAllProduct().getLast().getId();
 
     public void start() {
         do {
@@ -49,13 +53,16 @@ public class ProductView {
         String choice = Helper.getAndValidate(Helper.YELLOW+"\n=>Choose an option(): "+Helper.RESET, "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
+                createProduct();
                 break;
             case "r":
+                getProductById();
                 break;
             case "u":
                 update();
                 break;
             case "d":
+                deleteProduct();
                 break;
             case "s":
                 search();
@@ -131,12 +138,51 @@ public class ProductView {
 
     //create product (option w)
     private void createProduct() {
-
+        System.out.println("ID:" + (id + 1));
+        id++;
+        String name = Helper.getAndValidate("Input product name: ", "Product name cannot be empty");
+        double price;
+        do {
+            price = Double.parseDouble(Helper.getAndValidate("Enter price: ", "Price cannot be empty", "^-?\\d+(\\.\\d+)?$", "Wrong input format! Please input a valid price"));
+            if (price < 0) {
+                Helper.printErrorMsg("Price cannot be a negative number");
+                continue;
+            }else if(price==0){
+                Helper.printErrorMsg("Price cannot be 0");
+                continue;
+            }
+            break;
+        } while (true);
+        int qty;
+        do {
+            qty = Integer.parseInt(Helper.getAndValidate("Enter quantity: ", "Quantity cannot be empty", "^-?\\d+", "Wrong input format! Please input a valid quantity"));
+            if (qty < 0) {
+                Helper.printErrorMsg("Quantity cannot be a negative number");
+                continue;
+            }else if(qty==0){
+                Helper.printErrorMsg("Quantity cannot be 0");
+                continue;
+            }
+            break;
+        } while (true);
+        productController.add(new Product(id,name,price, qty, LocalDate.now()));
     }
 
     //get product by id (option r)
     private void getProductById() {
+        Product product = null;
+        int id = 0;
+        while (product == null) {
+            id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
 
+            if(id == -1) {
+                return;
+            }
+
+            product = productController.getProduct(id);
+        }
+        showProduct(product);
+        Helper.pressEnterToContinue();
     }
 
     // get product by name (option s)
@@ -146,7 +192,24 @@ public class ProductView {
 
     // get product by name (option d)
     private void deleteProduct() {
+        Product product = null;
+        int id = 0;
+        while (product == null) {
+            id = Integer.parseInt(Helper.getAndValidate("Please input id to delete: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
 
+            if(id == -1) {
+                return;
+            }
+
+            product = productController.getProduct(id);
+        }
+        showProduct(product);
+
+        if(Helper.userDecision("Are you sure you want to delete this product id: " + id + " ? (Y/N): ")) {
+            productController.delete(id);
+            System.out.println(Helper.returnStringColor("Successfully delete product", Helper.GREEN));
+            Helper.pressEnterToContinue();
+        }
     }
 
     //set rows (option se)
@@ -286,11 +349,11 @@ public class ProductView {
     private void search() {
         String searchTerm = Helper.getAndValidate("Enter product name to search: ", "Product name cannot be empty");
         List<Product> products = productController.search(searchTerm);
-        if (products == null) {
+        if(products == null) {
             return;
         }
 
-        showProduct(products);
+        showProduct(products,ShownBorders.SURROUND_HEADER_AND_COLUMNS);
         Helper.pressEnterToContinue();
     }
 
@@ -397,6 +460,14 @@ public class ProductView {
 
     private void showProduct(List<Product> products) {
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
+        //when trigger format table it will add set column width and add header
+        Helper.formatTable(table);
+        Helper.renderData(table, products, products.size());
+        System.out.println(table.render());
+    }
+
+    private void showProduct(List<Product> products, ShownBorders shownBorders) {
+        Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, shownBorders);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
         Helper.renderData(table, products, products.size());

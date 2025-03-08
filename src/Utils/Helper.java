@@ -4,6 +4,7 @@ import model.Product;
 import org.nocrala.tools.texttablefmt.CellStyle;
 import org.nocrala.tools.texttablefmt.Table;
 
+import java.time.Year;
 import java.util.List;
 import java.util.Scanner;
 
@@ -109,15 +110,14 @@ public interface Helper {
     }
 
     // ask to continue
-    private static boolean wantToContinue() {
-        String input = getAndValidate(YELLOW + "Do you want to continues? (y or n) : " + RESET, "Input cannot be empty", "^[yYnN]$", "Invalid input. Please input yY or nN");
+    static boolean userDecision(String message) {
+        String input = getAndValidate(message, "Input cannot be empty", "^[yYnN]$", "Invalid input. Please input yY or nN");
         return input.equalsIgnoreCase("y");
     }
 
     static String returnStringColor(String message, String color) {
         return color + message + RESET;
     }
-
     // three attempt input
     static String getAndValidate(String prompt, String emptyMsg, String regex, String regexMsg, int maxAttempts) {
         Scanner sc = new Scanner(System.in);
@@ -139,12 +139,11 @@ public interface Helper {
             attempts++;
 
             if (attempts == maxAttempts) {
-                boolean isContinue = wantToContinue();
-                if (!isContinue) {
-                    input = "-1";
-                    break;
+                boolean isContinue = userDecision("Do you want to continues? ");
+                    if (!isContinue) {
+                        input = "-1";
+                        break;
                 }
-                attempts=0;
             }
         }
 
