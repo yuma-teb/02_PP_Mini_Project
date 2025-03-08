@@ -68,7 +68,7 @@ CREATE TABLE row (
 Insert default values into the `row` table:
 
 ```sql
-INSERT INTO row (row_to_display) VALUES (1), (2), (3);
+INSERT INTO row (row_to_display) VALUES  (3);
 ```
 
 ## Mock Product Data&#x20;
