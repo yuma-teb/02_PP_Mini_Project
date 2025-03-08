@@ -64,8 +64,8 @@ public class ProductController {
     }
 
     //delete product
-    public void delete() {
-
+    public void delete(int id) {
+        productRepository.delete(id);
     }
 
     //backup (option ba)
