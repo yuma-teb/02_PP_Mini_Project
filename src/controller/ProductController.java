@@ -36,7 +36,7 @@ public class ProductController {
 
     //save product to database
     public void adding() {
-
+        productRepository.saveProducts(savedProduct);
     }
 
     //add product to update state

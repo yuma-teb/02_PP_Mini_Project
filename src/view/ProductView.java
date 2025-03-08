@@ -50,6 +50,7 @@ public class ProductView {
             case "se":
                 break;
             case "sa":
+                save();
                 break;
             case "un":
                 checkUnsaved();
@@ -110,7 +111,33 @@ public class ProductView {
 
     //save data to database (option sa)
     private void save() {
+        String message = Helper.returnStringColor("'si'", Helper.GREEN) + " for saving insert product and " + Helper.returnStringColor("'su'", Helper.GREEN) + " for saving update products or " + Helper.returnStringColor("'b'", Helper.RED) + " for back to menu \n Enter your option: ";
+        String option = Helper.getAndValidate(message, "Choice cannot be empty", "(?i)^(si|su|b)$", Helper.returnStringColor("Please enter a correct option", Helper.RED));
 
+        switch (option.toLowerCase()) {
+            case "si":
+                if(productController.getSavedProduct().isEmpty()) {
+                    System.out.println(Helper.returnStringColor("There is no insert products", Helper.RED));
+                    return;
+                }
+
+                productController.adding();
+                System.out.println(Helper.returnStringColor("Products insert successfully", Helper.GREEN));
+                Helper.pressEnterToContinue();
+                break;
+            case "su":
+                if(productController.getUpdatedProduct().isEmpty()) {
+                    System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
+                    return;
+                }
+
+                productController.updating();
+                System.out.println(Helper.returnStringColor("Product update successfully", Helper.GREEN));
+                Helper.pressEnterToContinue();
+                break;
+            case "b":
+                break;
+        }
     }
 
     // update product by id
@@ -174,20 +201,23 @@ public class ProductView {
 
         switch (option.toLowerCase()) {
             case "ui":
+                if(productController.getSavedProduct().isEmpty()) {
+                    System.out.println(Helper.returnStringColor("There is no insert products", Helper.RED));
+                    return;
+                }
+                showProduct(productController.getSavedProduct());
+                Helper.pressEnterToContinue();
                 break;
             case "uu":
                 if(productController.getUpdatedProduct().isEmpty()) {
                     System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
                     return;
                 }
-
                 showProduct(productController.getUpdatedProduct());
                 Helper.pressEnterToContinue();
-                productController.updating();
                 break;
             case "b":
                 break;
-
         }
     }
 
