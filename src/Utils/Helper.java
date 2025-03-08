@@ -49,6 +49,16 @@ public interface Helper {
         });
     }
 
+    static void renderData(Table table, List<Product> products, int limit) {
+        products.stream().limit(limit).forEach(product -> {
+            table.addCell(String.valueOf(product.getId()), align);
+            table.addCell(product.getName(), align);
+            table.addCell(product.getUnitPrice(), align);
+            table.addCell(product.getQty(), align);
+            table.addCell(product.getImportDate(), align);
+        });
+    }
+
     static void addFooter(Table table, int currentPage, int totalPage, int totalRecord) {
         table.addCell("Page : " + currentPage + " of " + totalPage, align, 2);
         table.addCell("Total Record : " + totalRecord, align, 3);
