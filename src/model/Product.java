@@ -1,5 +1,7 @@
 package model;
 
+import Utils.Helper;
+
 import java.time.LocalDate;
 
 public class Product {
@@ -51,10 +53,10 @@ public class Product {
 
     @Override
     public String toString() {
-        return "1. Name \t\t" +
-                "2. Unit Price\t\t" +
-                "3. Qty \t\t"+
-                "4. All Field \t\t"+
-                "5. Exit";
+        return Helper.GREEN+ "1. "+Helper.RESET+" Name \t\t" +
+                Helper.GREEN+"2. "+Helper.RESET+" Unit Price\t\t" +
+                Helper.GREEN+"3. "+Helper.RESET+" Quantity \t\t"+
+                Helper.GREEN+"4. "+Helper.RESET+" All Field \t\t"+
+                Helper.GREEN+"5. "+Helper.RESET+"Exit";
     }
 }
