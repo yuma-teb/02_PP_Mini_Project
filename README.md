@@ -1,6 +1,7 @@
 # Project Guide: JDBC Database Setup and Mock Data Insertion
 
-This guide walks you through setting up a database connection using JDBC, creating tables (`row` and `products`), and inserting default values into the `row` table along with 10 mock products into the `products` table.
+This guide walks you through setting up a database connection using JDBC, creating tables (`row` and `products`), and
+inserting default values into the `row` table along with 10 mock products into the `products` table.
 
 ## Database Setup&#x20;
 
@@ -13,7 +14,8 @@ Ensure your database is accessible with the correct credentials:
 Create a new database if it doesn’t exist:
 
 ```sql
-CREATE DATABASE miniproject;
+CREATE
+DATABASE miniproject;
 ```
 
 ## JDBC Connection&#x20;
@@ -49,16 +51,18 @@ public class DatabaseConnection {
 Create the `row` and `products` tables:
 
 ```sql
-CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50),
-    unitPrice NUMERIC(10, 2),
-    qty INTEGER,
-    import_date DATE
+CREATE TABLE products
+(
+    id          SERIAL PRIMARY KEY,
+    name        VARCHAR(50),
+    unitPrice   NUMERIC(10, 2),
+    qty         INTEGER,
+    importDate DATE
 );
 
-CREATE TABLE row (
-    id SERIAL PRIMARY KEY,
+CREATE TABLE row
+(
+    id             SERIAL PRIMARY KEY,
     row_to_display INTEGER
 );
 ```
@@ -68,7 +72,8 @@ CREATE TABLE row (
 Insert default values into the `row` table:
 
 ```sql
-INSERT INTO row (row_to_display) VALUES  (3);
+INSERT INTO row (row_to_display)
+VALUES (3);
 ```
 
 ## Mock Product Data&#x20;
@@ -76,163 +81,75 @@ INSERT INTO row (row_to_display) VALUES  (3);
 Insert 10 mock products into the `products` table:
 
 ```sql
-INSERT INTO products (name, unitPrice, qty, import_date) VALUES
-('Product 1', 10.99, 5, '2024-03-01'),
-('Product 2', 12.49, 8, '2024-03-02'),
-('Product 3', 15.99, 12, '2024-03-03'),
-('Product 4', 8.99, 4, '2024-03-04'),
-('Product 5', 22.50, 7, '2024-03-05'),
-('Product 6', 5.49, 10, '2024-03-06'),
-('Product 7', 19.99, 6, '2024-03-07'),
-('Product 8', 7.99, 9, '2024-03-08'),
-('Product 9', 14.75, 3, '2024-03-09'),
-('Product 10', 9.99, 11, '2024-03-10');
-```
+INSERT INTO products (name, unitPrice, qty, importDate)
+VALUES ('Coca-Cola', 10.99, 5, '2024-03-01'),
+       ('Pepsi', 12.49, 8, '2024-03-02'),
+       ('Sprite', 15.99, 12, '2024-03-03'),
+       ('Fanta', 8.99, 4, '2024-03-04'),
+       ('Mountain Dew', 22.50, 7, '2024-03-05'),
+       ('Dr Pepper', 5.49, 10, '2024-03-06'),
+       ('Red Bull', 19.99, 6, '2024-03-07'),
+       ('Monster Energy', 7.99, 9, '2024-03-08'),
+       ('Gatorade', 14.75, 3, '2024-03-09'),
+       ('Lipton Iced Tea', 9.99, 11, '2024-03-10');
 
-## Execute SQL Script Manually in PostgreSQL&#x20;
-
-To execute the SQL script and create tables with mock data in PostgreSQL, follow these steps:
-
-1. Save the SQL script in a file, e.g., `setup.sql`.
-2. Open a terminal and connect to your PostgreSQL database:
-
-```sh
-psql -U username -d mydatabase
-```
-
-3. Run the script inside the PostgreSQL session:
-
-```sh
-\i setup.sql
-```
-
-Alternatively, you can run the script directly from the terminal:
-
-```sh
-psql -U username -d mydatabase -f setup.sql
 ```
 
 After executing the script, your database will be set up with the necessary tables and data.
 
+# Commit Message Guidelines
 
+## Purpose
 
-# Query Builder Usage Guide
+A well-structured commit message enhances project maintainability, improves collaboration, and simplifies debugging. This guide outlines best practices for writing effective commit messages.
 
-This guide explains how to use the `InsertQueryBuilder`, `SelectQueryBuilder`, and `UpdateQueryBuilder` classes for constructing SQL queries dynamically.
+## Types of Commits
 
-## 1. InsertQueryBuilder
-Used to construct `INSERT` queries.
+Each commit should have a type that describes its purpose. Below are the most commonly used types:
 
-### Example:
-```java
-InsertQueryBuilder insert = new InsertQueryBuilder(TableName.PRODUCT)
-    .setValue("name", "Laptop")
-    .setValue("price", 1200);
+- **feat**: Introduces a new feature or enhancement.
+- **fix**: Resolves a bug or defect.
+- **docs**: Updates documentation (e.g., fixing typos, improving clarity).
+- **style**: Adjusts formatting, whitespace, or stylistic elements without altering functionality.
+- **refactor**: Improves code structure or quality without changing behavior.
+- **perf**: Enhances performance.
+- **test**: Adds or updates tests.
+- **build**: Modifies the build system, dependencies, or package configurations.
+- **ci**: Updates Continuous Integration (CI) configurations or scripts.
+- **chore**: General maintenance tasks that don’t fit other categories.
+- **revert**: Undoes a previous commit.
 
-String query = insert.buildQuery();
-System.out.println(query); // Output: INSERT INTO Product (name, price) VALUES (?, ?)
+## Scope (Optional)
+
+The scope specifies the specific area of the project affected (e.g., a module or component). It appears in parentheses after the commit type. If no specific scope applies, it can be omitted.
+
+### Examples:
+
+- `feat(auth): Add login functionality`
+- `fix(api): Correct user API endpoint`
+- `docs(readme): Update installation instructions`
+
+## Commit Message Structure
+
+A commit message should be concise yet informative. Use the following format:
+
+```
+<type>(<scope>): <short summary>
+
+<optional detailed explanation>
 ```
 
----
+### Guidelines:
+- **Use present tense**: "Add feature," not "Added feature."
+- **Be concise**: Keep the summary under 72 characters.
+- **Provide context if needed**: Use the body for additional details.
+- **Reference issues**: Link related tickets when applicable.
 
-## 2. SelectQueryBuilder
-Used to construct `SELECT` queries.
+### Examples:
 
-### Example:
-```java
-SelectQueryBuilder select = new SelectQueryBuilder(TableName.PRODUCT)
-    .where("price", 1200);
+- `feat(auth): Add JWT authentication support`
+- `fix(ui): Fix button alignment in the header component`
+- `perf(database): Optimize query performance`
+- `revert(auth): Revert password hashing update`
 
-String query = select.buildQuery();
-System.out.println(query); // Output: SELECT * FROM Product WHERE price = ?
-```
-
-Using custom operators:
-```java
-SelectQueryBuilder select = new SelectQueryBuilder(TableName.PRODUCT)
-    .where("price", 1000, QueryOperator.GREATER_THAN);
-
-String query = select.buildQuery();
-System.out.println(query); // Output: SELECT * FROM Product WHERE price > ?
-```
-
-Selecting specific columns:
-```java
-SelectQueryBuilder select = new SelectQueryBuilder(TableName.PRODUCT)
-    .select("name", "price")
-    .where("id", 1);
-
-String query = select.buildQuery();
-System.out.println(query); // Output: SELECT name, price FROM Product WHERE id = ?
-```
-
----
-
-## 3. UpdateQueryBuilder
-Used to construct `UPDATE` queries.
-
-### Example:
-```java
-UpdateQueryBuilder update = new UpdateQueryBuilder(TableName.PRODUCT)
-    .setValue("name", "Gaming Laptop")
-    .where("id", 1);
-
-String query = update.buildQuery();
-System.out.println(query); // Output: UPDATE Product SET name = ? WHERE id = ?
-```
-
-Updating multiple fields:
-```java
-UpdateQueryBuilder update = new UpdateQueryBuilder(TableName.PRODUCT)
-    .setValue("name", "Gaming Laptop")
-    .setValue("price", 1500)
-    .where("id", 1);
-
-String query = update.buildQuery();
-System.out.println(query); // Output: UPDATE Product SET name = ?, price = ? WHERE id = ?
-```
-
----
-
-## Notes:
-- `?` placeholders are used for parameterized queries to prevent SQL injection.
-- The `parameters` list in each builder stores the actual values to be used with prepared statements.
-- The `where` method is used to filter records in `SELECT` and `UPDATE` queries.
-- The `setValue` method is used to specify column values for `INSERT` and `UPDATE` queries.
-
-This guide provides a quick reference for utilizing the query builders effectively.
-
-### Types of Commits
-
-Each commit should have a type that describes the change. Below are the most commonly used commit types:
-
-- **feat**: A new feature or enhancement.
-- **fix**: A bug fix.
-- **docs**: Documentation changes (e.g., fixing typos or adding comments).
-- **style**: Code formatting changes (e.g., white-space, semicolons, etc.) that don't affect the logic.
-- **refactor**: A change that doesn't fix a bug or add a feature but improves code quality.
-- **perf**: A performance improvement.
-- **test**: Adding or modifying tests.
-- **build**: Changes to the build process or dependencies.
-- **ci**: Continuous Integration related changes (e.g., CI configuration).
-- **chore**: Routine tasks or changes that don’t fit into any other category.
-- **revert**: Reverts a previous commit.
-
-### Scope (Optional)
-
-The scope is a small part of the project that the commit affects (e.g., a specific module or feature). It is enclosed in parentheses and placed right after the type. If there's no specific scope, it can be omitted.
-
-Example:
-- **feat(auth)**: Add login functionality
-- **fix(api)**: Corrected the user API endpoint
-- **docs(readme)**: Update installation instructions
-
-### Message
-
-The message should be clear, concise, and written in the present tense. It should briefly describe the change without going into excessive detail. 
-
-Example:
-- **feat(auth):** Add JWT authentication support
-- **fix(ui):** Fix button alignment in header component
-
-
+By following these best practices, commit messages will remain clear, structured, and valuable for the entire development team.
