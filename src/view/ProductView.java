@@ -1,7 +1,7 @@
 package view;
 
-import Utils.Backup;
-import Utils.Helper;
+import utils.Backup;
+import utils.Helper;
 import controller.ProductController;
 import controller.RowController;
 import model.Product;
@@ -90,6 +90,11 @@ public class ProductView {
     }
 
     private void handlePagination(String choice) {
+        if (totalPage == 0&& ("nplfg".contains(choice))) {
+            Helper.printErrorMsg("No pages available.");
+            Helper.pressKeyToContinue("Press any key to continue");
+            return;
+        }
         switch (choice) {
             case "n":
                 pageNum++;
@@ -432,6 +437,7 @@ public class ProductView {
                 Backup.restoreDatabase(backUpFileName.get(id - 1));
                 break;
             } while (true);
+            pageNum =  productController.getAllProduct().isEmpty()?0:1;
         }
     }
 

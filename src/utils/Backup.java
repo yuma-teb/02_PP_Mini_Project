@@ -1,4 +1,4 @@
-package Utils;
+package utils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -26,15 +26,7 @@ public interface Backup {
                 "-f", backupFile,
                 "-v"
         );
-//        ProcessBuilder processBuilder = new ProcessBuilder(
-//                pgDump,
-//                "-U", username,
-//                "-d", database,
-//                "-t", tableName,
-//                "-F", "p",
-//                "-f", backupFile,
-//                "-v"
-//        );
+
         // Avoid password prompt
         processBuilder.environment().put("PGPASSWORD", password);
 
@@ -84,41 +76,6 @@ public interface Backup {
             e.printStackTrace();
         }
     }
-//    static void restoreDatabase(String restorePath) {
-//        String tableName = "products";
-//        String pgRestore = "C:\\Program Files\\PostgreSQL\\17\\bin\\pg_restore.exe";
-//        String username = "postgres";
-//        String password = "123";
-//        String database = "miniproject";
-//        restorePath = "src\\resources\\backups\\"+restorePath;
-//        ProcessBuilder processBuilder = new ProcessBuilder(
-//                pgRestore,
-//                "-U", username,
-//                "-d", database,
-//                "-t", tableName,
-//                "-v",
-//                restorePath
-//        );
-//        processBuilder.environment().put("PGPASSWORD", password);
-//
-//        try {
-//            Process process = processBuilder.start();
-//            int exitCode = process.waitFor();
-//            if (exitCode == 0) {
-//                if (Files.exists(Paths.get(restorePath))) {
-//                    System.out.println("Database restored successfully!");
-//                } else {
-//                    System.err.println("Restore failed: File not found!");
-//                }
-//            } else {
-//                System.err.println("Restore failed with exit code: " + exitCode);
-//            }
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//
-//
-//    }
 
     static String getNextBackupFilename(String backupDir) {
         File dir = new File(backupDir);
