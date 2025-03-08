@@ -1,11 +1,10 @@
 package controller;
 
-import model.Product;
-import model.ProductRepository;
-import view.ProductView;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import model.Product;
+import model.ProductRepository;
 
 public class ProductController {
     private ProductRepository productRepository = new ProductRepository();
