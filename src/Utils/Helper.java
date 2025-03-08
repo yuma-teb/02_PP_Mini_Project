@@ -12,6 +12,7 @@ public interface Helper {
     String GREEN = "\u001b[32m";
     String BLUE = "\u001b[34m";
     String RED = "\u001b[31m";
+    String YELLOW = "\u001B[33m";
     CellStyle align = new CellStyle(CellStyle.HorizontalAlign.center);
 
     //table related method
@@ -27,21 +28,21 @@ public interface Helper {
     static void addHeader(Table table) {
         List<String> headers = List.of("ID", "Name", "Unit Price", "Qty", "Import Date");
         headers.forEach(s -> {
-            table.addCell(s, align);
+            table.addCell(BLUE + s + RESET, align);
         });
     }
 
     static void renderData(Table table, Product product) {
-        table.addCell(String.valueOf(product.getId()), align);
+        table.addCell(GREEN + product.getId() + RESET, align);
         table.addCell(product.getName(), align);
         table.addCell(product.getUnitPrice(), align);
         table.addCell(product.getQty(), align);
         table.addCell(product.getImportDate(), align);
     }
 
-    static void renderData(Table table, List<Product> products, int pageNum,int limit) {
-        products.stream().skip((pageNum-1)*limit).limit(limit).forEach(product -> {
-            table.addCell(String.valueOf(product.getId()), align);
+    static void renderData(Table table, List<Product> products, int pageNum, int limit) {
+        products.stream().skip((pageNum - 1) * limit).limit(limit).forEach(product -> {
+            table.addCell(GREEN + product.getId() + RESET, align);
             table.addCell(product.getName(), align);
             table.addCell(product.getUnitPrice(), align);
             table.addCell(product.getQty(), align);
@@ -51,7 +52,7 @@ public interface Helper {
 
     static void renderData(Table table, List<Product> products, int limit) {
         products.stream().limit(limit).forEach(product -> {
-            table.addCell(String.valueOf(product.getId()), align);
+            table.addCell(GREEN + product.getId() + RESET, align);
             table.addCell(product.getName(), align);
             table.addCell(product.getUnitPrice(), align);
             table.addCell(product.getQty(), align);
@@ -60,8 +61,8 @@ public interface Helper {
     }
 
     static void addFooter(Table table, int currentPage, int totalPage, int totalRecord) {
-        table.addCell("Page : " + currentPage + " of " + totalPage, align, 2);
-        table.addCell("Total Record : " + totalRecord, align, 3);
+        table.addCell("Page : " + YELLOW + currentPage + RESET + " of " + RED + totalPage + RESET, align, 2);
+        table.addCell("Total Record : " + GREEN + totalRecord + RESET, align, 3);
     }
 
     //Validate empty space
@@ -73,7 +74,7 @@ public interface Helper {
             if (!(input = sc.nextLine()).trim().isEmpty()) {
                 return input;
             }
-           printErrorMsg(emptyMsg);
+            printErrorMsg(emptyMsg);
         } while (true);
 
     }
@@ -101,21 +102,22 @@ public interface Helper {
     }
 
     //press key to continue
-    static void pressKeyToContinue(String msg){
+    static void pressKeyToContinue(String msg) {
         Scanner sc = new Scanner(System.in);
-        System.out.println(msg+"......");
+        System.out.println(YELLOW + msg + "......" + RESET);
         sc.nextLine();
     }
 
     // ask to continue
     private static boolean wantToContinue() {
-        String input = getAndValidate("Do you want to continues? ", "Input cannot be empty", "^[yYnN]$", "Invalid input. Please input yY or nN");
+        String input = getAndValidate(YELLOW + "Do you want to continues? (y or n) : " + RESET, "Input cannot be empty", "^[yYnN]$", "Invalid input. Please input yY or nN");
         return input.equalsIgnoreCase("y");
     }
 
     static String returnStringColor(String message, String color) {
         return color + message + RESET;
     }
+
     // three attempt input
     static String getAndValidate(String prompt, String emptyMsg, String regex, String regexMsg, int maxAttempts) {
         Scanner sc = new Scanner(System.in);
@@ -126,10 +128,10 @@ public interface Helper {
         while (true) {
             System.out.print(prompt);
             input = sc.nextLine();
-            if (input.isEmpty()) {
-                System.out.println(emptyMsg);
+            if (input.trim().isEmpty()) {
+                printErrorMsg(emptyMsg);
             } else if (!input.matches(regex)) {
-                System.out.println(regexMsg);
+                printErrorMsg(regexMsg);
             } else {
                 return input;
             }
@@ -138,10 +140,11 @@ public interface Helper {
 
             if (attempts == maxAttempts) {
                 boolean isContinue = wantToContinue();
-                    if (!isContinue) {
-                        input = "-1";
-                        break;
+                if (!isContinue) {
+                    input = "-1";
+                    break;
                 }
+                attempts=0;
             }
         }
 
@@ -149,8 +152,8 @@ public interface Helper {
     }
 
     static void pressEnterToContinue() {
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Press Enter to continue...");
-            sc.nextLine();
+        Scanner sc = new Scanner(System.in);
+        System.out.println(YELLOW + "Press Enter to continue..." + RESET);
+        sc.nextLine();
     }
 }

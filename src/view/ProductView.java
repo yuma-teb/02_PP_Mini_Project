@@ -9,8 +9,7 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
-
-import java.util.ArrayList;
+import java.time.Year;
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,14 +32,21 @@ public class ProductView {
     private void displayMenu() {
         showProduct();
         System.out.println(" ".repeat(26) + "-".repeat(10) + "Menu" + "-".repeat(10));
-        System.out.println("\tN. Next Page\t\tP. Previous Page\t\tF. First Page\t\tL. Last Page\t\tG. Goto");
-        System.out.println("\nW) Write\t\tR) Read\t\t\tU) Update\t\tD) Delete\t\tS) Search (name)\t\tSe) Set rows");
-        System.out.println("sa) Save\t\tUn) Unsaved\t\tBa) Backup\t\tRe) Restore\t\tE) Exit");
+
+        System.out.println(format("N.") + " Next Page\t\t" + format("P.") + " Previous Page\t\t" +
+                format("F.") + " First Page\t\t" + format("L.") + " Last Page\t\t" + format("G.") + " Goto");
+
+        System.out.println("\n" + format("W)") + " Write\t\t" + format("R)") + " Read\t\t\t" +
+                format("U)") + " Update\t\t" + format("D)") + " Delete\t\t" +
+                format("S)") + " Search (name)\t\t" + format("Se)") + " Set rows");
+
+        System.out.println(format("sa)") + " Save\t\t" + format("Un)") + " Unsaved\t\t" +
+                format("Ba)") + " Backup\t\t" + format("Re)") + " Restore\t\t" + format("E)") + " Exit");
     }
 
     //handle user choice
     private void handleUserChoice() {
-        String choice = Helper.getAndValidate("\n=>Choose an option(): ", "Choice cannot be empty");
+        String choice = Helper.getAndValidate(Helper.YELLOW+"\n=>Choose an option(): "+Helper.RESET, "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
                 break;
@@ -163,12 +169,12 @@ public class ProductView {
 
     //save data to database (option sa)
     private void save() {
-        String message = Helper.returnStringColor("'si'", Helper.GREEN) + " for saving insert product and " + Helper.returnStringColor("'su'", Helper.GREEN) + " for saving update products or " + Helper.returnStringColor("'b'", Helper.RED) + " for back to menu \n Enter your option: ";
+        String message = Helper.returnStringColor("'si'", Helper.GREEN) + " for saving insert product and " + Helper.returnStringColor("'su'", Helper.GREEN) + " for saving update products or " + Helper.returnStringColor("'b'", Helper.RED) + " for back to menu \n "+ Helper.YELLOW +"Enter your option: "+Helper.RESET;
         String option = Helper.getAndValidate(message, "Choice cannot be empty", "(?i)^(si|su|b)$", Helper.returnStringColor("Please enter a correct option", Helper.RED));
 
         switch (option.toLowerCase()) {
             case "si":
-                if(productController.getSavedProduct().isEmpty()) {
+                if (productController.getSavedProduct().isEmpty()) {
                     System.out.println(Helper.returnStringColor("There is no insert products", Helper.RED));
                     return;
                 }
@@ -178,7 +184,7 @@ public class ProductView {
                 Helper.pressEnterToContinue();
                 break;
             case "su":
-                if(productController.getUpdatedProduct().isEmpty()) {
+                if (productController.getUpdatedProduct().isEmpty()) {
                     System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
                     return;
                 }
@@ -197,20 +203,19 @@ public class ProductView {
         Product product = null;
         int id = 0;
         while (product == null) {
-            id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
+            id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number, Id cannot be 0 or negative number!", 3));
 
-            if(id == -1) {
+            if (id == -1) {
                 return;
             }
 
             product = productController.getProduct(id);
         }
         showProduct(product);
-         breakWhile:
+        breakWhile:
         while (true) {
             System.out.println(product.toString());
-            String option = Helper.getAndValidate("Choose an option from 1 - 5: ", "Choice cannot be empty", "^[1-5]$", "Option must be input as number from 1 -5");
-
+            String option = Helper.getAndValidate(Helper.YELLOW+"Choose an option from 1 - 5: "+Helper.RESET, "Choice cannot be empty", "^[1-5]$", "Option must be input as number from 1 -5");
 
             String name;
             String unitPrice;
@@ -220,26 +225,30 @@ public class ProductView {
                 case 1:
                     name = Helper.getAndValidate("Enter name: ", "Name cannot be empty");
                     product.setName(name);
+                    Helper.printSuccessMsg("Product name has been updated!\n");
                     break;
                 case 2:
-                    unitPrice = Helper.getAndValidate("Enter price: ", "price cannot be empty", "^\\d+(\\.\\d{1,2})?$", "Price must be input as number");
+                    unitPrice = Helper.getAndValidate("Enter price: ", "Price cannot be empty", "^\\d+(\\.\\d{1,2})?$", "Price must be input as number, you cannot input 0 or negative number");
                     product.setUnitPrice(Double.parseDouble(unitPrice));
+                    Helper.printSuccessMsg("Product price has been updated\n");
                     break;
                 case 3:
-                    qty = Helper.getAndValidate("Enter qty: ", "qty cannot be empty", "^[1-9]\\d*$", " Qty must be input as number");
+                    qty = Helper.getAndValidate("Enter qty: ", "Quantity cannot be empty", "^[1-9]\\d*$", "Quantity must be input as number, you cannot input 0 or negative number");
                     product.setQty(Integer.parseInt(qty));
+                    Helper.printSuccessMsg("Product quantity has been updated\n");
                     break;
                 case 4:
                     name = Helper.getAndValidate("Enter name: ", "Name cannot be empty");
-                    unitPrice = Helper.getAndValidate("Enter price: ", "price cannot be empty", "^\\d+(\\.\\d{1,2})?$", "Price must be input as number");
-                    qty = Helper.getAndValidate("Enter qty: ", "qty cannot be empty", "^[1-9]\\d*$", " Qty must be input as number");
+                    unitPrice = Helper.getAndValidate("Enter price: ", "Price cannot be empty", "^\\d+(\\.\\d{1,2})?$", "Price must be input as number, you cannot input 0 or negative number");
+                    qty = Helper.getAndValidate("Enter quantity: ", "Quantity cannot be empty", "^[1-9]\\d*$", "Quantity must be input as number, you cannot input 0 or negative number");
 
                     product.setName(name);
                     product.setUnitPrice(Double.parseDouble(unitPrice));
                     product.setQty(Integer.parseInt(qty));
+                    Helper.printSuccessMsg("Product information has been updated\n");
                     break;
                 case 5:
-                    break  breakWhile;
+                    break breakWhile;
             }
         }
         productController.update(product);
@@ -253,7 +262,7 @@ public class ProductView {
 
         switch (option.toLowerCase()) {
             case "ui":
-                if(productController.getSavedProduct().isEmpty()) {
+                if (productController.getSavedProduct().isEmpty()) {
                     System.out.println(Helper.returnStringColor("There is no insert products", Helper.RED));
                     return;
                 }
@@ -261,7 +270,7 @@ public class ProductView {
                 Helper.pressEnterToContinue();
                 break;
             case "uu":
-                if(productController.getUpdatedProduct().isEmpty()) {
+                if (productController.getUpdatedProduct().isEmpty()) {
                     System.out.println(Helper.returnStringColor("There is no update products", Helper.RED));
                     return;
                 }
@@ -275,19 +284,19 @@ public class ProductView {
 
     // search product by name
     private void search() {
-    String searchTerm = Helper.getAndValidate("Enter product name to search: ", "Product name cannot be empty");
-    List<Product> products = productController.search(searchTerm);
-    if(products == null) {
-        return;
-    }
+        String searchTerm = Helper.getAndValidate("Enter product name to search: ", "Product name cannot be empty");
+        List<Product> products = productController.search(searchTerm);
+        if (products == null) {
+            return;
+        }
 
-    showProduct(products);
-    Helper.pressEnterToContinue();
+        showProduct(products);
+        Helper.pressEnterToContinue();
     }
 
     //backup (option ba)
     private void backup() {
-        String confimation = Helper.getAndValidate("Are you sure you want to backup the data (y/n)? : ", "You cannot input empty value", "[ynYN]", "Please input y or n");
+        String confimation = Helper.getAndValidate(Helper.YELLOW+"Are you sure you want to backup the data (y/n)? : "+Helper.RESET, "You cannot input empty value", "[ynYN]", "Please input y or n");
         switch (confimation.toLowerCase()) {
             case "y":
                 System.out.println("\n" + "=".repeat(30));
@@ -327,7 +336,7 @@ public class ProductView {
             do {
                 //breaker = 3 ask for confirmation
                 if (breaker == 3) {
-                    String confirmation = Helper.getAndValidate("Do you want to continues (y/n)? : ", "Choice cannot be empty", "[ynYN]", "Invalid input please input y or n");
+                    String confirmation = Helper.getAndValidate(Helper.YELLOW+"Do you want to continues (y/n)? : "+Helper.RESET, "Choice cannot be empty", "[ynYN]", "Invalid input please input y or n");
                     switch (confirmation.toLowerCase()) {
                         case "y":
                             breaker = 0;
@@ -378,7 +387,7 @@ public class ProductView {
         System.out.println(table.render());
     }
 
-    private void showProduct (Product product) {
+    private void showProduct(Product product) {
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
@@ -386,11 +395,15 @@ public class ProductView {
         System.out.println(table.render());
     }
 
-    private void showProduct (List<Product> products) {
+    private void showProduct(List<Product> products) {
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
         Helper.renderData(table, products, products.size());
         System.out.println(table.render());
+    }
+
+    public String format(String text) {
+        return Helper.GREEN + text + Helper.RESET;
     }
 }
