@@ -10,7 +10,6 @@ import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -45,11 +44,13 @@ public class ProductView {
             case "w":
                 break;
             case "r":
+                getProductById();
                 break;
             case "u":
                 update();
                 break;
             case "d":
+                deleteProduct();
                 break;
             case "s":
                 search();
@@ -130,7 +131,19 @@ public class ProductView {
 
     //get product by id (option r)
     private void getProductById() {
+        Product product = null;
+        int id = 0;
+        while (product == null) {
+            id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
 
+            if(id == -1) {
+                return;
+            }
+
+            product = productController.getProduct(id);
+        }
+        showProduct(product);
+        Helper.pressEnterToContinue();
     }
 
     // get product by name (option s)
@@ -140,7 +153,24 @@ public class ProductView {
 
     // get product by name (option d)
     private void deleteProduct() {
+        Product product = null;
+        int id = 0;
+        while (product == null) {
+            id = Integer.parseInt(Helper.getAndValidate("Please input id to delete: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
 
+            if(id == -1) {
+                return;
+            }
+
+            product = productController.getProduct(id);
+        }
+        showProduct(product);
+
+        if(Helper.userDecision("Are you sure you want to delete this product id: " + id + " ? (Y/N): ")) {
+            productController.delete(id);
+            System.out.println(Helper.returnStringColor("Successfully delete product", Helper.GREEN));
+            Helper.pressEnterToContinue();
+        }
     }
 
     //set rows (option se)
@@ -275,14 +305,14 @@ public class ProductView {
 
     // search product by name
     private void search() {
-    String searchTerm = Helper.getAndValidate("Enter product name to search: ", "Product name cannot be empty");
-    List<Product> products = productController.search(searchTerm);
-    if(products == null) {
-        return;
-    }
+        String searchTerm = Helper.getAndValidate("Enter product name to search: ", "Product name cannot be empty");
+        List<Product> products = productController.search(searchTerm);
+        if(products == null) {
+            return;
+        }
 
-    showProduct(products);
-    Helper.pressEnterToContinue();
+        showProduct(products,ShownBorders.SURROUND_HEADER_AND_COLUMNS);
+        Helper.pressEnterToContinue();
     }
 
     //backup (option ba)
@@ -388,6 +418,14 @@ public class ProductView {
 
     private void showProduct (List<Product> products) {
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
+        //when trigger format table it will add set column width and add header
+        Helper.formatTable(table);
+        Helper.renderData(table, products, products.size());
+        System.out.println(table.render());
+    }
+
+    private void showProduct(List<Product> products, ShownBorders shownBorders) {
+        Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, shownBorders);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
         Helper.renderData(table, products, products.size());
