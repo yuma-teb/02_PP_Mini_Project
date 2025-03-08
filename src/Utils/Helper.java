@@ -63,7 +63,7 @@ public interface Helper {
             if (!(input = sc.nextLine()).trim().isEmpty()) {
                 return input;
             }
-            System.out.println(emptyMsg);
+           printErrorMsg(emptyMsg);
         } while (true);
 
     }

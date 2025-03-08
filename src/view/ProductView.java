@@ -9,6 +9,7 @@ import org.nocrala.tools.texttablefmt.BorderStyle;
 import org.nocrala.tools.texttablefmt.ShownBorders;
 import org.nocrala.tools.texttablefmt.Table;
 
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -39,7 +40,7 @@ public class ProductView {
 
     //handle user choice
     private void handleUserChoice() {
-        String choice = Helper.getAndValidate("=>Chooise an option(): ", "Choice cannot be empty");
+        String choice = Helper.getAndValidate("\n=>Choose an option(): ", "Choice cannot be empty");
         switch (choice.toLowerCase()) {
             case "w":
                 break;
@@ -53,6 +54,7 @@ public class ProductView {
             case "s":
                 break;
             case "se":
+                setRow();
                 break;
             case "sa":
                 break;
@@ -140,7 +142,20 @@ public class ProductView {
 
     //set rows (option se)
     private void setRow() {
+        do {
+            int row = Integer.parseInt(Helper.getAndValidate("Please input number of row per page : ", "Row number cannot be empty", "-?\\d+", "Invalid input. Please Input a number!"));
+            if (row <= 0) {
+                Helper.printErrorMsg("Row cannot be negative number or zero!");
+                continue;
+            }
+            int updatedRow = rowController.setRow(row);
+            if (updatedRow == row) {
+                limit = row;
+                break;
+            }
+            Helper.printErrorMsg("Error updating row");
 
+        } while (true);
     }
 
     //save data to database (option sa)
@@ -255,12 +270,12 @@ public class ProductView {
         System.out.println(table.render());
     }
 
-    private void showAProduct (Product product) {
+    private void showAProduct(Product product) {
 
         Table table = new Table(5, BorderStyle.UNICODE_ROUND_BOX, ShownBorders.ALL);
         //when trigger format table it will add set column width and add header
         Helper.formatTable(table);
-        Helper.renderData(table,product);
+        Helper.renderData(table, product);
         System.out.println(table.render());
     }
 }
