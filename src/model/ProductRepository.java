@@ -7,6 +7,7 @@ import query.QueryOperator;
 import query.SelectQueryBuilder;
 import query.TableName;
 
+import javax.swing.plaf.nimbus.State;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
@@ -93,7 +94,15 @@ public class ProductRepository {
 
     //delete product
     public void delete(int id) {
+        String sql = "delete from products where id = ?";
 
+        try(PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setInt(1, id);
+
+             st.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //save product
