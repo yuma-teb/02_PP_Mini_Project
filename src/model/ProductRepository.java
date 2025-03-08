@@ -7,12 +7,10 @@ import query.QueryOperator;
 import query.SelectQueryBuilder;
 import query.TableName;
 
-import javax.swing.plaf.nimbus.State;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class ProductRepository {
     private Connection conn = DatabaseConnection.getConnection();
@@ -22,7 +20,7 @@ public class ProductRepository {
     public List<Product> get() {
         try (Statement st = conn.createStatement()) {
             List<Product> products = new ArrayList<>();
-            String sql = "select * from products;";
+            String sql = "select * from products order by id;";
             ResultSet resultSet = st.executeQuery(sql);
             while (resultSet.next()) {
                 products.add(new Product(resultSet.getInt("id"), resultSet.getString(2), resultSet.getDouble(3), resultSet.getInt(4), resultSet.getTimestamp(5).toLocalDateTime().toLocalDate()));

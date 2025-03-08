@@ -35,6 +35,7 @@ public class ProductController {
     //save product to database
     public void adding() {
         productRepository.saveProducts(savedProduct);
+        savedProduct.clear();
     }
 
     //add product to update state
@@ -54,6 +55,7 @@ public class ProductController {
     //update product to database
     public void updating() {
         productRepository.updateProducts(updatedProduct);
+        updatedProduct.clear();
     }
 
     //update product to database
