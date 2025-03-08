@@ -10,8 +10,8 @@ public class RowController {
     return rowRepository.get();
   }
 
-  // update
-  public int update() {
-    return 1;
-  }
+    //update
+    public int update(){
+        return 1;
+    }
 }

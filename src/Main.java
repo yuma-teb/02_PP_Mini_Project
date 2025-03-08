@@ -1,4 +1,8 @@
-import query.*;
+import Utils.QueryBuilder;
+import query.InsertQueryBuilder;
+import query.SelectQueryBuilder;
+import query.TableName;
+import query.UpdateQueryBuilder;
 import view.ProductView;
 
 public class Main {
