@@ -139,7 +139,7 @@ public interface Helper {
             attempts++;
 
             if (attempts == maxAttempts) {
-                boolean isContinue = userDecision("Do you want to continues? ");
+                boolean isContinue = userDecision("Do you want to continues? (y/n): ");
                     if (!isContinue) {
                         input = "-1";
                         break;

@@ -173,7 +173,7 @@ public class ProductView {
         Product product = null;
         int id = 0;
         while (product == null) {
-            id = Integer.parseInt(Helper.getAndValidate("Input ID to update: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
+            id = Integer.parseInt(Helper.getAndValidate("Input id of product you want to find: ", "Input ID cannot be empty", "^\\d+$", "Id must be input as number", 3));
 
             if(id == -1) {
                 return;
