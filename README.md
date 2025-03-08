@@ -1,3 +1,121 @@
+# Project Guide: JDBC Database Setup and Mock Data Insertion
+
+This guide walks you through setting up a database connection using JDBC, creating tables (`row` and `products`), and inserting default values into the `row` table along with 10 mock products into the `products` table.
+
+## Database Setup&#x20;
+
+Ensure your database is accessible with the correct credentials:
+
+- **Database Name**: `mydatabase`
+- **Username**: `username`
+- **Password**: `password`
+
+Create a new database if it doesn’t exist:
+
+```sql
+CREATE DATABASE miniproject;
+```
+
+## JDBC Connection&#x20;
+
+Use the following Java code snippet to establish a JDBC connection:
+
+```java
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DatabaseConnection {
+    private static final String URL = "jdbc:postgresql://localhost:5432/miniproject";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "123";
+
+    public static Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+
+    public static void main(String[] args) {
+        try (Connection connection = getConnection()) {
+            System.out.println("Connected to the database successfully!");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+## SQL Script for Table Creation&#x20;
+
+Create the `row` and `products` tables:
+
+```sql
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50),
+    unitPrice NUMERIC(10, 2),
+    qty INTEGER,
+    import_date DATE
+);
+
+CREATE TABLE row (
+    id SERIAL PRIMARY KEY,
+    row_to_display INTEGER
+);
+```
+
+## Insert Default Rows&#x20;
+
+Insert default values into the `row` table:
+
+```sql
+INSERT INTO row (row_to_display) VALUES (1), (2), (3);
+```
+
+## Mock Product Data&#x20;
+
+Insert 10 mock products into the `products` table:
+
+```sql
+INSERT INTO products (name, unitPrice, qty, import_date) VALUES
+('Product 1', 10.99, 5, '2024-03-01'),
+('Product 2', 12.49, 8, '2024-03-02'),
+('Product 3', 15.99, 12, '2024-03-03'),
+('Product 4', 8.99, 4, '2024-03-04'),
+('Product 5', 22.50, 7, '2024-03-05'),
+('Product 6', 5.49, 10, '2024-03-06'),
+('Product 7', 19.99, 6, '2024-03-07'),
+('Product 8', 7.99, 9, '2024-03-08'),
+('Product 9', 14.75, 3, '2024-03-09'),
+('Product 10', 9.99, 11, '2024-03-10');
+```
+
+## Execute SQL Script Manually in PostgreSQL&#x20;
+
+To execute the SQL script and create tables with mock data in PostgreSQL, follow these steps:
+
+1. Save the SQL script in a file, e.g., `setup.sql`.
+2. Open a terminal and connect to your PostgreSQL database:
+
+```sh
+psql -U username -d mydatabase
+```
+
+3. Run the script inside the PostgreSQL session:
+
+```sh
+\i setup.sql
+```
+
+Alternatively, you can run the script directly from the terminal:
+
+```sh
+psql -U username -d mydatabase -f setup.sql
+```
+
+After executing the script, your database will be set up with the necessary tables and data.
+
+
+
 # Query Builder Usage Guide
 
 This guide explains how to use the `InsertQueryBuilder`, `SelectQueryBuilder`, and `UpdateQueryBuilder` classes for constructing SQL queries dynamically.
